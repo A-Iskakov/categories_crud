@@ -1,9 +1,21 @@
-from django.shortcuts import render
+"""
+project views for users and categories
+"""
+from django.contrib.auth import authenticate
+from django.core.exceptions import ObjectDoesNotExist
+from drf_spectacular.utils import extend_schema
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ViewSet
+
+from backend.serializers import UserSerializer, AuthSerializer
+from utils.responses import ResponseCreated, ResponseBadRequest, ResponseOk, ResponseForbidden
+
 
 class UserAccountViewSet(ViewSet):
     """
-    Ветка для работы с аккаунтами пользователей.
+    API directory for user accounts
     """
 
     serializer_class = UserSerializer
@@ -12,7 +24,7 @@ class UserAccountViewSet(ViewSet):
     @action(detail=False, methods=['post'], name='register')
     def register(self, request):
         """
-        Регистрация пользователя
+        register user
         """
 
         user_serializer = UserSerializer(data=request.data)
@@ -27,12 +39,12 @@ class UserAccountViewSet(ViewSet):
     @action(detail=False, methods=['post'], name='login')
     def login(self, request, *args, **kwargs):
         """
-        Авторизация пользователей
+        auth user
         """
 
         auth_form = AuthSerializer(data=request.data)
         if auth_form.is_valid():
-            user = authenticate(username=request.data['email'], password=request.data['password'])
+            user = authenticate(username=request.data['username'], password=request.data['password'])
 
             if user is not None and user.is_active:
                 try:
@@ -49,7 +61,7 @@ class UserAccountViewSet(ViewSet):
     @action(detail=False, methods=['get'], name='logout', permission_classes=[IsAuthenticated])
     def logout(self, request, *args, **kwargs):
         """
-        Завершить сессию пользователя
+        logout session
         """
 
         Token.objects.filter(user_id=request.user.id).delete()
@@ -60,7 +72,7 @@ class UserAccountViewSet(ViewSet):
             )
     def my_profile_details(self, request, *args, **kwargs):
         """
-         получить данные моего профиля
+         get current user profile details
         """
 
         user_serializer = UserSerializer(request.user)
@@ -71,7 +83,7 @@ class UserAccountViewSet(ViewSet):
             )
     def edit_my_profile(self, request):
         """
-        Изменить данные профиля текущего пользователя
+        change profile of the current user
         """
 
         user_serializer = UserSerializer(request.user, data=request.data, partial=True)

@@ -20,7 +20,7 @@ class UpperCategory(models.Model):
 
 class InnerCategory(models.Model):
     """
-    an inner level category i.e. Apple Phones, LED TVs, AMD Laptops etc.
+    an inner level category i.e. Apple Phones, LED TVs, Asus Laptops etc.
     """
     name = models.CharField(max_length=60)
     upper_category = models.ForeignKey(UpperCategory, on_delete=models.CASCADE, related_name='inner_categories')

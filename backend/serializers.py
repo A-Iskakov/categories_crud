@@ -1,10 +1,15 @@
+"""
+project DRF serializers for users and categories
+"""
+import traceback
+
 from django.contrib.auth import get_user_model
 
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import fields
+from rest_framework.authtoken.models import Token
 
-
-from rest_framework.serializers import Serializer, ModelSerializer
+from rest_framework.serializers import Serializer, ModelSerializer, raise_errors_on_nested_writes
 from rest_framework.validators import UniqueValidator
 
 
@@ -17,12 +22,12 @@ class AuthSerializer(Serializer):
 # @extend_schema_serializer(exclude_fields=('id', 'auth_token'))  # schema ignore these fields
 class UserSerializer(ModelSerializer):
     password = fields.CharField(required=True, validators=[validate_password], write_only=True)
-    username = fields.CharField(required=True, validators=[UniqueValidator(queryset=Meta.model.objects.all())])
+    username = fields.CharField(required=True, validators=[UniqueValidator(queryset=get_user_model().objects.all())])
     Authorization = fields.CharField(read_only=True)
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'type', 'first_name', 'last_name', 'email', 'password', 'Authorization')
+        fields = ('id', 'first_name', 'last_name', 'email', 'username','password', 'Authorization')
 
         extra_kwargs = {
             'id': {'read_only': True},
@@ -37,7 +42,6 @@ class UserSerializer(ModelSerializer):
 
         ModelClass = self.Meta.model
 
-        validated_data.update({'username': validated_data['email']})
         try:
             user = ModelClass._default_manager.create_user(**validated_data)
         except TypeError:
@@ -71,13 +75,12 @@ class UserSerializer(ModelSerializer):
     def update(self, instance, validated_data):
 
         raise_errors_on_nested_writes('update', self, validated_data)
-
+        if 'password' in validated_data:
+            instance.set_password(validated_data.pop('password'))
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
-        if 'password' in validated_data:
-            instance.set_password(validated_data['password'])
-        if 'email' in validated_data:
-            instance.username = validated_data['email']
+
+
 
         instance.save()
 
