@@ -12,6 +12,32 @@ from rest_framework.authtoken.models import Token
 from rest_framework.serializers import Serializer, ModelSerializer, raise_errors_on_nested_writes
 from rest_framework.validators import UniqueValidator
 
+from backend.models import UpperCategory, InnerCategory
+
+
+class InnerCategorySerializer(ModelSerializer):
+    upper_category_id = fields.IntegerField(write_only=True)
+
+    class Meta:
+        model = InnerCategory
+        fields = ('id', 'name', 'description', 'upper_category_id')
+
+        extra_kwargs = {
+            'id': {'read_only': True}
+        }
+
+
+class UpperCategorySerializer(ModelSerializer):
+    inner_categories = InnerCategorySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = UpperCategory
+        fields = '__all__'
+
+        extra_kwargs = {
+            'id': {'read_only': True}
+        }
+
 
 class AuthSerializer(Serializer):
     """simple serializer to be used as a form for user auth"""
@@ -27,12 +53,11 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'first_name', 'last_name', 'email', 'username','password', 'Authorization')
+        fields = ('id', 'first_name', 'last_name', 'email', 'username', 'password', 'Authorization')
 
         extra_kwargs = {
             'id': {'read_only': True},
-            'type': {'read_only': True},
-            # 'auth_token': {'read_only': True},
+
             'password': {'write_only': True},
 
         }
@@ -79,8 +104,6 @@ class UserSerializer(ModelSerializer):
             instance.set_password(validated_data.pop('password'))
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
-
-
 
         instance.save()
 

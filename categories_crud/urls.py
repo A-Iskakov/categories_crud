@@ -18,10 +18,16 @@ from django.urls import path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from rest_framework.routers import DefaultRouter
 
-from backend.views import UserAccountViewSet
+from backend.views import UserAccountViewSet, UpperCategoryViewset, InnerCategoryViewset
 
 router = DefaultRouter()
 router.register(r'users-accounts', UserAccountViewSet, basename='user-accounts')
+router.register(r'upper-categories', UpperCategoryViewset,
+                basename='upper-categories'
+                )
+router.register(r'inner-categories', InnerCategoryViewset,
+                basename='inner-categories'
+                )
 
 
 urlpatterns = [
