@@ -18,7 +18,8 @@ class UpperCategoryViewset(ModelViewSet):
     """
     API directory for upper categories
     """
-    queryset = UpperCategory.objects.all()
+
+    queryset = UpperCategory.objects.prefetch_related('inner_categories').all()
     serializer_class = UpperCategorySerializer
 
     def get_permissions(self):
