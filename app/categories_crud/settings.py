@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+from os import getenv
 from os.path import join
 from pathlib import Path
 
@@ -24,7 +25,7 @@ SECRET_KEY = 'django-insecure-wrimyz#2jrbb&0+3-h5zhc#demkykl#+8=$*0##!&i8y780n&5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 0
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -77,11 +78,31 @@ WSGI_APPLICATION = 'categories_crud.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+        'NAME': getenv('POSTGRES_DB'),
+
+        'USER': getenv('POSTGRES_USER'),
+
+        'PASSWORD': getenv('POSTGRES_PASSWORD'),
+
+        'HOST': getenv('SQL_HOST', 'localhost'),
+
+        'PORT': getenv('SQL_PORT'),
+
     }
+
 }
 
 # Password validation

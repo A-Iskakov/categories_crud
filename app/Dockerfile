@@ -4,4 +4,6 @@ WORKDIR /code
 COPY requirements.txt /code/
 
 COPY . /code/
-RUN cd /code;pip install -r requirements.txt; python manage.py makemigrations; python manage.py migrate; python manage.py collectstatic;
+RUN apk update  && apk add postgresql-dev gcc python3-dev musl-dev
+RUN cd /code;pip install -r requirements.txt;  python manage.py collectstatic;
+ENTRYPOINT ["sh", "/code/entrypoint.sh"]
