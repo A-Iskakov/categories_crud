@@ -5,9 +5,8 @@ services:
     build:
       context: ./app
     command: python manage.py runserver 0.0.0.0:8000
-#    volumes:
-#      - ./static_volume:/home/app/web/staticfiles
-#      - ./media_volume:/home/app/web/mediafiles
+    volumes:
+      - static_volume:/static
     expose:
       - 8000
     ports:
@@ -25,10 +24,15 @@ services:
   nginx:
     build: ./nginx
     volumes:
-      - ./static_volume:/home/app/web/staticfiles
-      - ./media_volume:/home/app/web/mediafiles
+       - static_volume:/static
     ports:
       - 1337:80
 #    depends_on:
 #      - web
-
+volumes:
+  static_volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./static_volume

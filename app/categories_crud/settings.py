@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-wrimyz#2jrbb&0+3-h5zhc#demkykl#+8=$*0##!&i8y780n&5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = 0
 
 ALLOWED_HOSTS = []
 
@@ -141,3 +141,5 @@ SPECTACULAR_SETTINGS = {
         'utils.postprocess_schema.postprocess_schema'
     ],
 }
+
+STATIC_ROOT = '/static'
