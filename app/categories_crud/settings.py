@@ -166,7 +166,7 @@ SPECTACULAR_SETTINGS = {
 STATIC_ROOT = '/static/'
 
 CACHEOPS_REDIS = {
-    'host': 'redis', # redis-server is on same machine
+    'host': getenv('REDIS_HOST'), # redis-server is on same machine
     'port': 6379,        # default redis port
     'db': 1,             # SELECT non-default redis database
                          # using separate redis db or redis instance
