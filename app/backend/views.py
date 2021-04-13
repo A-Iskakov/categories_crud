@@ -9,8 +9,9 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ViewSet, ModelViewSet
 
-from backend.models import UpperCategory, InnerCategory
-from backend.serializers import UserSerializer, AuthSerializer, UpperCategorySerializer, InnerCategorySerializer
+
+from .models import UpperCategory, InnerCategory
+from .serializers import UserSerializer, AuthSerializer, UpperCategorySerializer, InnerCategorySerializer
 from utils.responses import ResponseCreated, ResponseBadRequest, ResponseOk, ResponseForbidden
 
 

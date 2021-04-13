@@ -19,5 +19,9 @@ To launch application do the following
 
 `docker-compose up --detach --build`
 
+you may also run tests explicitly
+
+`docker exec -it categories_crud_web_1 python manage.py test backend.tests`
+
 Then you can open this page to see API root schema
 `localhost:8080/api/schema/swagger-ui/`

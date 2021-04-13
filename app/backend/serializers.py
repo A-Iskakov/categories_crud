@@ -12,7 +12,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.serializers import Serializer, ModelSerializer, raise_errors_on_nested_writes
 from rest_framework.validators import UniqueValidator
 
-from backend.models import UpperCategory, InnerCategory
+from .models import UpperCategory, InnerCategory
 
 
 class InnerCategorySerializer(ModelSerializer):
