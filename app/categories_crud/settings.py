@@ -20,10 +20,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-wrimyz#2jrbb&0+3-h5zhc#demkykl#+8=$*0##!&i8y780n&5'
+SECRET_KEY = getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 0
+DEBUG = getenv('DEBUG', False)
 
 ALLOWED_HOSTS = ['*']
 
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'backend.apps.BackendConfig',
     #     manually added apps
     'rest_framework',
-    # 'uritemplate',
+    'cacheops',
     'drf_spectacular',
     'rest_framework.authtoken',
 ]
@@ -163,4 +163,18 @@ SPECTACULAR_SETTINGS = {
     ],
 }
 
-STATIC_ROOT = '/static'
+STATIC_ROOT = '/static/'
+
+CACHEOPS_REDIS = {
+    'host': 'redis', # redis-server is on same machine
+    'port': 6379,        # default redis port
+    'db': 1,             # SELECT non-default redis database
+                         # using separate redis db or redis instance
+                         # is highly recommended
+
+    'socket_timeout': 3,   # connection timeout in seconds, optional
+
+}
+CACHEOPS = {
+    '*.*': {'ops': 'get', 'timeout': 60*15},
+}

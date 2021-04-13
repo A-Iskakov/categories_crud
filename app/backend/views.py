@@ -19,7 +19,7 @@ class UpperCategoryViewset(ModelViewSet):
     API directory for upper categories
     """
 
-    queryset = UpperCategory.objects.prefetch_related('inner_categories').all()
+    queryset = UpperCategory.objects.prefetch_related('inner_categories').cache()
     serializer_class = UpperCategorySerializer
 
     def get_permissions(self):
@@ -37,7 +37,7 @@ class InnerCategoryViewset(UpperCategoryViewset):
     """
     API directory for inner categories
     """
-    queryset = InnerCategory.objects.all()
+    queryset = InnerCategory.objects.cache()
     serializer_class = InnerCategorySerializer
 
 class UserAccountViewSet(ViewSet):

@@ -4,17 +4,26 @@ services:
   web:
     build:
       context: ./app
-    command: python manage.py runserver 0.0.0.0:8000
+#    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn -w 3 -b 0.0.0.0:8000 categories_crud.wsgi
     volumes:
       - static_volume:/static
     expose:
       - 8000
-    ports:
-      - 8000:8000
+#    ports:
+#      - 8000:8000
     env_file:
       - .env
     depends_on:
       - db
+      - redis
+  redis:
+    image: "redis:latest"
+    hostname: redis
+#    ports:
+#      - "6379:6379"
+    expose:
+      - 6379
   db:
     image: postgres:latest
     hostname: db
@@ -25,14 +34,14 @@ services:
 
     expose:
       - 5432
-    ports:
-      - 5432:5432
+#    ports:
+#      - 5432:5432
   nginx:
     build: ./nginx
     volumes:
        - static_volume:/static
     ports:
-      - 1337:80
+      - 8080:80
     depends_on:
       - web
 volumes:
